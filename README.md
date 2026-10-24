@@ -1,17 +1,33 @@
 # SHealth Tweak
 
-三星健康 Xposed 模块。安装后在 LSPosed 勾选 `com.sec.android.app.shealth` 即可，无需手动创建文件夹或输入 developer key。
+[中文](README.zh-CN.md)
 
-Xposed module for Samsung Health. Enable in LSPosed and check `com.sec.android.app.shealth`. No need to create folders or provide a developer key.
+Xposed module for Samsung Health: unlock FeatureList debug features, bypass developer key verification, and spoof region.
 
-新版本三星健康隐藏 FeatureList 需要 developer key 验证，本模块跳过全部验证直接开启。 / New Samsung Health versions hide FeatureList behind developer key validation. This module bypasses all validation.
+## Features
 
-**使用方法 / Usage**：Settings → About Samsung Health → SetFeatures
+- **Developer mode** — Skips `FeatureSettingOn` / `CscManagerOn` file detection and Developer Key validation, enabling all FeatureList debug toggles directly and revealing the developer entry in the About page.
+- **Region spoof** — Rewrites the region (including Samsung Account country code) to the selected area to unlock region-locked features.
+
+## Usage
+
+1. Install the APK and enable `com.sec.android.app.shealth` in LSPosed (scope declared in `META-INF/xposed/scope.list`).
+2. Open SHealth Tweak → toggle features (defaults: developer mode on, region spoof off).
+3. Settings → About Samsung Health → SetFeatures to open the debug list.
+4. Tap **Apply & restart** to force-stop and relaunch Samsung Health.
+
+## Build
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-Samsung Health v6.32.0.001 / Android 9+
+## Compatibility
+
+- Samsung Health: 7.x global (verified on 7.1.0.053) — CN variant not supported
+- Android: 10+ (minSdk 29)
+- Framework: LSPosed (Modern Xposed API 102)
+
+## License
 
 MIT

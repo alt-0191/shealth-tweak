@@ -1,43 +1,54 @@
 package com.dev.alt0191.shealthtweak.hook
 
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.factory.toClass
-import com.highcapable.yukihookapi.hook.param.PackageParam
+import android.content.Context
+import android.widget.RadioGroup
+import io.github.libxposed.api.XposedInterface
+
 
 object DevModeHook {
 
-    fun install(param: PackageParam) {
-        param.apply {
-            // FeatureManager 文件检测
-            "com.samsung.android.app.shealth.config.FeatureManager".toClass().apply {
-                method { name = "isEnabled" }.hook { replaceAny { true } }
-                method { name = "isCscFeatureEnabled" }.hook { replaceAny { true } }
-            }
+    private const val FEATURE_MANAGER = "com.samsung.android.app.shealth.config.FeatureManager"
+    private const val SDK_DEV_POLICY =
+        "com.samsung.android.sdk.health.sdkpolicy.SdkDevPolicyControl\$Companion"
+    private const val FEATURE_LIST_ACTIVITY =
+        "com.samsung.android.app.shealth.config.FeatureListActivity"
+    private const val VERIFICATION_DIALOG =
+        "com.samsung.android.app.shealth.config.VerificationDialogActivity"
+    private const val VERIFICATION_UTILS =
+        "com.samsung.android.app.shealth.config.FeatureVerificationUtils"
 
-            // 关于页入口
-            "com.samsung.android.sdk.health.sdkpolicy.SdkDevPolicyControl\$Companion".toClass()
-                .method {
-                    name = "isDeveloperModeOn"
-                    param(android.content.Context::class.java)
-                }
-                .hook { replaceAny { true } }
+    fun install(api: XposedInterface, cl: ClassLoader) {
+        val fm = cl.loadOrNull(FEATURE_MANAGER)
 
-            // 跳过 dev key 弹窗
-            "com.samsung.android.app.shealth.config.FeatureListActivity".toClass()
-                .method {
-                    name = "handleDeveloperModeEnable"
-                    param(String::class.java, android.widget.RadioGroup::class.java)
-                }
-                .hook {
-                    before {
-                        val key = args[0] as String
-                        try {
-                            val fmClass = "com.samsung.android.app.shealth.config.FeatureManager".toClass()
-                            val fm = fmClass.getDeclaredMethod("getInstance").invoke(null)
-                            fmClass.getDeclaredMethod("setStringValue", String::class.java, String::class.java)
-                                .invoke(fm, key, "on")
-                        } catch (_: Exception) {}
-                        resultNull()
+        // C1() gates the SetFeatures entry on isDeveloperModeOn && isEnabled(); both must be true.
+        if (fm != null) {
+            fm.methodOrNull("isEnabled")?.let { api.returnConstant(it, true) }
+            fm.methodOrNull("isCscFeatureEnabled")?.let { api.returnConstant(it, true) }
+        }
+
+        cl.loadOrNull(SDK_DEV_POLICY)
+            ?.methodOrNull("isDeveloperModeOn", Context::class.java)
+            ?.let { api.returnConstant(it, true) }
+
+        // VerificationDialogActivity.onCreate short-circuits on isVerified(): setResult(RESULT_OK); finish();
+        cl.loadOrNull(VERIFICATION_UTILS)
+            ?.methodOrNull("isVerified")
+            ?.let { api.returnConstant(it, true) }
+
+        if (fm != null) {
+            cl.loadOrNull(FEATURE_LIST_ACTIVITY)
+                ?.methodOrNull("handleDeveloperModeEnable", String::class.java, RadioGroup::class.java)
+                ?.let { origin ->
+                    api.shortCircuit(origin) { chain ->
+                        val key = chain.getArg(0) as? String
+                        if (key != null) {
+                            runCatching {
+                                val inst = fm.methodOrNull("getInstance")?.invoke(null)
+                                fm.methodOrNull("setStringValue", String::class.java, String::class.java)
+                                    ?.invoke(inst, key, "on")
+                            }
+                        }
+                        null
                     }
                 }
         }

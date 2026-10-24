@@ -1,15 +1,17 @@
 [versions]
 agp = "9.2.1"
 kotlin = "2.1.0"
-ksp = "2.1.0-1.0.29"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.12.0"
-yukihookapi = "1.3.2"
 androidx-annotation = "1.10.0"
+libxposed-api = "102.0.0"
+libxposed-service = "102.0.0"
+compose-bom = "2026.09.00"
+material3 = "1.5.0-beta02"
 
 [libraries]
 androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidx-annotation" }
@@ -19,12 +21,21 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-yukihookapi-core = { group = "com.highcapable.yukihookapi", name = "api", version.ref = "yukihookapi" }
-yukihookapi-ksp-xposed = { group = "com.highcapable.yukihookapi", name = "ksp-xposed", version.ref = "yukihookapi" }
-yukihookapi-stub = { group = "de.robv.android.xposed", name = "api", version = "82" }
+
+libxposed-api = { group = "io.github.libxposed", name = "api", version.ref = "libxposed-api" }
+libxposed-service = { group = "io.github.libxposed", name = "service", version.ref = "libxposed-service" }
+
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version = "1.13.0" }
+
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
