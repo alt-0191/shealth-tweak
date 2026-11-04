@@ -1,5 +1,7 @@
 package com.dev.alt0191.shealthtweak
 internal object ModulePrefsBridge {
+    fun readAssistant() = com.dev.alt0191.shealthtweak.prefs.ModulePrefs.readAssistant()
+    fun setAssistant(on: Boolean) = com.dev.alt0191.shealthtweak.prefs.ModulePrefs.setAssistant(on)
     fun readDevMode() = com.dev.alt0191.shealthtweak.prefs.ModulePrefs.readDevMode()
     fun readRegion() = com.dev.alt0191.shealthtweak.prefs.ModulePrefs.readRegion()
     fun readCountry() = com.dev.alt0191.shealthtweak.prefs.ModulePrefs.readCountry()

@@ -48,4 +48,6 @@
     <string name="region_in">India</string>
     <string name="region_sg">Singapore</string>
     <string name="region_au">Australia</string>
+    <string name="feature_assistant">Samsung Health Assistant</string>
+    <string name="feature_assistant_desc">Enable Assistant using the staging server. Works on some Health versions; other versions can still be tried. Apply &amp; restart after changing.</string>
 </resources>

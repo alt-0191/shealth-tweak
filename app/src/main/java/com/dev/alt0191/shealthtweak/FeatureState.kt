@@ -7,6 +7,14 @@ import androidx.compose.runtime.setValue
 
 object FeatureState {
 
+    private val _assistant = mutableStateOf(FeatureFlags.DEFAULT_ASSISTANT)
+    val assistant: Boolean get() = _assistant.value
+
+    fun setAssistant(on: Boolean) {
+        _assistant.value = on
+        ModulePrefsBridge.setAssistant(on)
+    }
+
     private val _devMode = mutableStateOf(FeatureFlags.DEFAULT_DEV_MODE)
     private val _region = mutableStateOf(FeatureFlags.DEFAULT_REGION)
     private val _country = mutableStateOf(FeatureFlags.DEFAULT_COUNTRY)
@@ -16,6 +24,7 @@ object FeatureState {
     val country: String get() = _country.value
 
     fun load() {
+        _assistant.value = ModulePrefsBridge.readAssistant()
         _devMode.value = ModulePrefsBridge.readDevMode()
         _region.value = ModulePrefsBridge.readRegion()
         _country.value = ModulePrefsBridge.readCountry()
@@ -37,6 +46,7 @@ object FeatureState {
     }
 
     fun reset() {
+        setAssistant(FeatureFlags.DEFAULT_ASSISTANT)
         setDevMode(FeatureFlags.DEFAULT_DEV_MODE)
         setRegion(FeatureFlags.DEFAULT_REGION)
         setCountry(FeatureFlags.DEFAULT_COUNTRY)

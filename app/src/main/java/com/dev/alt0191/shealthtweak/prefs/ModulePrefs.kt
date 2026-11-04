@@ -43,6 +43,15 @@ object ModulePrefs {
     val isAvailable: Boolean get() = cached != null
     fun serviceOrNull(): XposedService? = service
 
+    fun readAssistant(): Boolean =
+        local?.getBoolean(FeatureFlags.KEY_ASSISTANT, FeatureFlags.DEFAULT_ASSISTANT)
+            ?: FeatureFlags.readBoolean(cached, FeatureFlags.KEY_ASSISTANT, FeatureFlags.DEFAULT_ASSISTANT)
+
+    fun setAssistant(on: Boolean) {
+        runCatching { local?.edit()?.putBoolean(FeatureFlags.KEY_ASSISTANT, on)?.apply() }
+        runCatching { cached?.edit()?.putBoolean(FeatureFlags.KEY_ASSISTANT, on)?.apply() }
+    }
+
     fun readDevMode(): Boolean =
         local?.getBoolean(FeatureFlags.KEY_DEV_MODE, FeatureFlags.DEFAULT_DEV_MODE)
             ?: FeatureFlags.readBoolean(cached, FeatureFlags.KEY_DEV_MODE, FeatureFlags.DEFAULT_DEV_MODE)
@@ -75,6 +84,7 @@ object ModulePrefs {
         val r = cached ?: return
         runCatching {
             r.edit()
+                .putBoolean(FeatureFlags.KEY_ASSISTANT, l.getBoolean(FeatureFlags.KEY_ASSISTANT, FeatureFlags.DEFAULT_ASSISTANT))
                 .putBoolean(FeatureFlags.KEY_DEV_MODE, l.getBoolean(FeatureFlags.KEY_DEV_MODE, FeatureFlags.DEFAULT_DEV_MODE))
                 .putBoolean(FeatureFlags.KEY_REGION, l.getBoolean(FeatureFlags.KEY_REGION, FeatureFlags.DEFAULT_REGION))
                 .putString(FeatureFlags.KEY_COUNTRY, l.getString(FeatureFlags.KEY_COUNTRY, FeatureFlags.DEFAULT_COUNTRY))

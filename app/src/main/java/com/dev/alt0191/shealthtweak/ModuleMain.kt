@@ -1,6 +1,7 @@
 package com.dev.alt0191.shealthtweak
 
 import android.util.Log
+import com.dev.alt0191.shealthtweak.hook.AssistantHook
 import com.dev.alt0191.shealthtweak.hook.DevModeHook
 import com.dev.alt0191.shealthtweak.hook.RegionHook
 import io.github.libxposed.api.XposedModule
@@ -31,6 +32,9 @@ class ModuleMain : XposedModule() {
         val region = FeatureFlags.readBoolean(prefs, FeatureFlags.KEY_REGION, FeatureFlags.DEFAULT_REGION)
         val country = FeatureFlags.countryOf(FeatureFlags.readCountry(prefs))
 
+        val assistant = FeatureFlags.readBoolean(prefs, FeatureFlags.KEY_ASSISTANT, FeatureFlags.DEFAULT_ASSISTANT)
+        runCatching { AssistantHook.install(this, cl, assistant) }
+            .onFailure { log(Log.ERROR, TAG, "AssistantHook failed: $it") }
         if (devMode) {
             runCatching { DevModeHook.install(this, cl) }
                 .onFailure { log(Log.ERROR, TAG, "DevModeHook failed: $it") }
@@ -40,7 +44,7 @@ class ModuleMain : XposedModule() {
                 .onFailure { log(Log.ERROR, TAG, "RegionHook failed: $it") }
         }
 
-        log(Log.INFO, TAG, "hooks installed (devMode=$devMode region=$region country=${country.code})")
+        log(Log.INFO, TAG, "hooks installed (devMode=$devMode assistant=$assistant region=$region country=${country.code})")
     }
 
     private companion object {
