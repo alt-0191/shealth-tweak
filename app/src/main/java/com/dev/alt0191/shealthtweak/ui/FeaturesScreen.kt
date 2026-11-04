@@ -81,6 +81,12 @@ fun FeaturesScreen() {
         ) {}
 
         FeatureCard(
+            feature = FeatureFlags.ASSISTANT,
+            checked = FeatureState.assistant,
+            onCheckedChange = { FeatureState.setAssistant(it) },
+        ) {}
+
+        FeatureCard(
             feature = FeatureFlags.REGION,
             checked = region,
             onCheckedChange = { FeatureState.setRegion(it) },

@@ -7,6 +7,9 @@ object FeatureFlags {
     const val TARGET_PACKAGE = "com.sec.android.app.shealth"
     const val GROUP = "features"
 
+    const val KEY_ASSISTANT = "assistant"
+    const val DEFAULT_ASSISTANT = true
+
     const val KEY_DEV_MODE = "dev_mode"
     const val KEY_REGION = "region"
     const val KEY_COUNTRY = "country"
@@ -40,7 +43,15 @@ object FeatureFlags {
         descRes = R.string.feature_region_desc,
     )
 
-    val ALL = listOf(DEV_MODE, REGION)
+    val ASSISTANT = Feature(
+        KEY_ASSISTANT, "Samsung Health Assistant",
+        "Enable Assistant using the staging server. Works on some Health versions; other versions can still be tried. Apply & restart after changing.",
+        DEFAULT_ASSISTANT,
+        titleRes = R.string.feature_assistant,
+        descRes = R.string.feature_assistant_desc,
+    )
+
+    val ALL = listOf(DEV_MODE, ASSISTANT, REGION)
 
     data class Country(
         val code: String,

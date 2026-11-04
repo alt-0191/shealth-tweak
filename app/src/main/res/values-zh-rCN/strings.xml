@@ -48,4 +48,6 @@
     <string name="region_in">印度</string>
     <string name="region_sg">新加坡</string>
     <string name="region_au">澳大利亚</string>
+    <string name="feature_assistant">三星健康助手</string>
+    <string name="feature_assistant_desc">使用预发布服务器启用助手。仅部分三星健康版本支持，但仍可在其他版本尝试。更改后请应用并重启。</string>
 </resources>
